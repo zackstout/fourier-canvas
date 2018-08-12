@@ -1,13 +1,26 @@
 
 var circs = [];
 
+function generateCircles(n) {
+  var size = 80;
+
+  for (var i=0; i < n; i++) {
+    if (i === 0) {
+      center = {x: 500, y: 200};
+    } else {
+      center = prev_center;
+    }
+    var circ = new Circle(center.x, center.y, size, Math.random() * 4);
+    circs.push(circ);
+    prev_center = center;
+    size *= 0.6;
+  }
+}
+
 function setup() {
   createCanvas(1000, 600);
   background('lightGrey');
-  var circ1 = new Circle(300, 300, 120, 2);
-  var center2 = circ1.findPointer();
-  var circ2 = new Circle(center2.x, center2.y, 80, 3);
-  circs.push(circ1, circ2);
+  generateCircles(4);
 }
 
 function draw() {
@@ -58,8 +71,4 @@ function Circle(x, y, r, v) {
     noStroke();
     ellipse(this.pointer.x, this.pointer.y, 5);
   };
-
-
-
-
 }
