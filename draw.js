@@ -7,6 +7,8 @@ var w1, h1, w2, h2;
 new p5(topSketch, 'top');
 new p5(btmSketch, 'btm');
 
+// NOTE: I don't think it's quite working -- doesn't seem sufficiently "swivelly" or jagged when the smallest circle has a large speed.
+// Also now the second circle is never rotating?
 // ====================================================================================
 
 function topSketch(p) {
@@ -37,7 +39,7 @@ function topSketch(p) {
       } else {
         c.draw();
       }
-      c.angle += 0.02 * c.v;
+      c.angle += 0.02 * c.v * (1 + i/2);
 
     }
 
@@ -45,14 +47,26 @@ function topSketch(p) {
       return s + c.y;
     }, -h2/2);
 
-    total_history.push({
-      x: time,
-      y: final_y
-    });
+    addToHistory(time, final_y);
+
     time ++;
   };
 }
 
+
+function addToHistory(t, fin_y) {
+  if (t >= w1 - 10) {
+    console.log('hiya!', total_history);
+    total_history.shift(); // EVERY TIME! i think it's pop but it's shift.
+    // total_history.forEach(c => {
+    //   c.x -= 1;
+    // });
+  }
+  total_history.push({
+    x: t,
+    y: fin_y
+  });
+}
 // ====================================================================================
 
 function btmSketch(p) {
@@ -66,11 +80,18 @@ function btmSketch(p) {
     p.background('lightblue');
     p.stroke('black');
     p.line(10, h1/2, w1 - 10, h1/2);
-    total_history.forEach(function(c) {
+
+    for (let i=0; i < total_history.length; i++) {
+      const c = total_history[i];
       p.noStroke();
       p.fill('steelblue');
-      p.ellipse(10 + c.x , h1/2 - c.y * 1.5, 4);
-    });
+      p.ellipse(10 + i , h1/2 - c.y * 1.5, 4);
+    }
+    // total_history.forEach(function(c) {
+    //   p.noStroke();
+    //   p.fill('steelblue');
+    //   p.ellipse(10 + c.x , h1/2 - c.y * 1.5, 4);
+    // });
   };
 }
 
